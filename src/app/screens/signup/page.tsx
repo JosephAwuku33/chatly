@@ -1,10 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface IFormInput {
+  fullName: string;
+  email: string;
+  password: string;
+}
 
 export default function SignUp() {
+  const { register, handleSubmit } = useForm<IFormInput>();
+
+  const signUpWithEmailAndPasswordHandler: SubmitHandler<IFormInput> = (
+    data
+  ) => {
+    console.log(data);
+  };
+
   return (
     <main className="font-[sans-serif] bg-white text-white md:h-screen">
-    {/**Main page with two columns on wider screens */}
+      {/**Main page with two columns on wider screens */}
       <div className="grid md:grid-cols-2 items-center gap-8 h-full">
         <div className="max-md:order-1 p-4">
           <Image
@@ -18,7 +33,10 @@ export default function SignUp() {
         </div>
         {/** form component on the right side */}
         <div className="flex items-center md:p-8 p-6 bg-[#141414] h-full lg:w-11/12 lg:ml-auto">
-          <form className="max-w-lg w-full mx-auto">
+          <form
+            onSubmit={handleSubmit(signUpWithEmailAndPasswordHandler)}
+            className="max-w-lg w-full mx-auto"
+          >
             <div className="mb-12">
               <h3 className="text-3xl font-bold text-green-950">
                 Create an account
@@ -29,9 +47,10 @@ export default function SignUp() {
               <label className="text-xs block mb-2">Full Name</label>
               <div className="relative flex items-center">
                 <input
-                  name="name"
+                  {...register("fullName", {
+                    required: true,
+                  })}
                   type="text"
-                  required
                   className="w-full bg-transparent text-sm border-b border-gray-300 focus:border-green-950 px-2 py-3 outline-none"
                   placeholder="Enter name"
                 />
@@ -54,7 +73,13 @@ export default function SignUp() {
               <label className="text-xs block mb-2">Email</label>
               <div className="relative flex items-center">
                 <input
-                  name="email"
+                  {...register("email", {
+                    required: true,
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
                   type="email"
                   required
                   className="w-full bg-transparent text-sm border-b border-gray-300 focus:border-green-950 px-2 py-3 outline-none"
@@ -95,7 +120,10 @@ export default function SignUp() {
               <label className="text-xs block mb-2">Password</label>
               <div className="relative flex items-center">
                 <input
-                  name="password"
+                   {...register("password", {
+                    required: true,
+                    minLength: { value: 8, message: "Characters too short" },
+                  })}
                   type="password"
                   required
                   className="w-full bg-transparent text-sm border-b border-gray-300 focus:border-green-950 px-2 py-3 outline-none"

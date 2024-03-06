@@ -1,7 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface IFormInput {
+  email: string;
+  password: string;
+}
 
 export default function Login() {
+  const { register, handleSubmit } = useForm<IFormInput>();
+  
+  const signInWithEmailAndPasswordHandler: SubmitHandler<IFormInput> = (
+    data
+  ) => {
+    console.log(data);
+  };
+
   return (
     <main className="font-[sans-serif] text-[#333]">
       <div className="grid lg:grid-cols-3 md:grid-cols-2 items-center lg:gap-8 gap-4 h-full">
@@ -19,7 +33,7 @@ export default function Login() {
 
         {/** Right Column for Form and fields */}
         <div className="w-full p-6">
-          <form>
+          <form onSubmit={handleSubmit(signInWithEmailAndPasswordHandler)}>
             <div className="mb-12">
               <h3 className="text-3xl font-extrabold">Sign in</h3>
               <p className="text-sm mt-4 ">
@@ -38,9 +52,14 @@ export default function Login() {
               <label className="text-xs block mb-2">Email</label>
               <div className="relative flex items-center">
                 <input
-                  name="email"
+                  {...register("email", {
+                    required: true,
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
                   type="email"
-                  required
                   className="w-full text-sm border-b border-gray-300 focus:border-[#333] px-2 py-3 outline-none"
                   placeholder="Enter email"
                 />
@@ -79,9 +98,11 @@ export default function Login() {
               <label className="text-xs block mb-2">Password</label>
               <div className="relative flex items-center">
                 <input
-                  name="password"
+                  {...register("password", {
+                    required: true,
+                    minLength: { value: 8, message: "Characters too short" },
+                  })}
                   type="password"
-                  required
                   className="w-full text-sm border-b border-gray-300 focus:border-[#333] px-2 py-3 outline-none"
                   placeholder="Enter password"
                 />
@@ -122,7 +143,7 @@ export default function Login() {
             {/** Buttons for sign up and its options */}
             <div className="mt-12">
               <button
-                type="button"
+                type="submit"
                 className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-full text-white bg-green-700 hover:bg-blue-700 focus:outline-none"
               >
                 Sign in
