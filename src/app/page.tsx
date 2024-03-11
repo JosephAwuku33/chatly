@@ -1,9 +1,5 @@
-import RootNavigation from "./navigation/page";
+import RootNavigation from "./navigation/RootNavigation";
 
 export default function Home() {
-  return (
-    <>
-      <RootNavigation />
-    </>
-  );
+  return <RootNavigation />;
 }
