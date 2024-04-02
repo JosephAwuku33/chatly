@@ -8,8 +8,8 @@ export function LogOutButton() {
   const handleLogOuT = async () => {
     try {
       await signOut(auth);
+      localStorage.clear();
       router.push("/login");
-
       console.log("succesfully signed out");
     } catch (err) {
       console.log(err);
@@ -18,7 +18,7 @@ export function LogOutButton() {
   return (
     <button
       onClick={handleLogOuT}
-      className="rounded mt-2 p-3 bg-red-950 text-white "
+      className="rounded mt-2 p-3 bg-red-600 hover:bg-red-950 text-white "
     >
       Sign Out
     </button>

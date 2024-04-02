@@ -1,26 +1,29 @@
 "use client";
-import { LogOutButton } from "@/components/ui/logoutbtn";
-import NameLabel from "@/components/ui/nameLabel";
+// import NameLabel from "@/components/ui/nameLabel";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { useRouter } from "next/navigation";
+import { SideBar } from "@/components/ui/sidebar";
+import { ChatArea } from "@/components/ui/chatArea";
+
 
 const HomePage = () => {
   const isAuthenticated = useLocalStorage("isAuthenticated");
   const router = useRouter();
 
+
   useEffect(() => {
-    if (!isAuthenticated){
-      router.push("/login");
+    if ( !isAuthenticated){
+      router.replace("/login");
     }
   }, [isAuthenticated, router]);
 
-
   return (
-    <main className="flex items-center flex-col gap-3 justify-center h-screen bg-[#141414]">
-      <NameLabel />
-      <LogOutButton />
-    </main>
+    <div className="flex flex-row h-screen bg-[#090909]">
+      <SideBar/>
+      <ChatArea/>
+    </div>
   );
 };
 

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { auth, GoogleProvider } from "@/app/firebase/firebase-config";
+import { auth, GoogleProvider, db } from "@/app/firebase/firebase-config";
 import Link from "next/link";
 import Image from "next/image";
 import PacManLoader from "@/components/ui/PacManLoader";
@@ -13,6 +13,8 @@ import {
 } from "firebase/auth";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import { doc, setDoc } from "firebase/firestore";
+import { generateUsername } from "unique-username-generator";
 
 interface IFormInput {
   fullName: string;
@@ -39,17 +41,30 @@ export default function SignUp() {
   ) => {
     setLoading(true);
     try {
-      const { email, password } = data;
+      const { email, password, fullName } = data;
+      // generate random and unique username for user based on fullName
+      const username = generateUsername("", 2, 19, fullName);
       const newChatUser = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
+      // Create the user's proifle and store in database
+      const userDoc = await setDoc(doc(db, "users", newChatUser.user.uid), {
+        uid: newChatUser.user.uid,
+        username,
+        email
+      });
+
+     // Create empty user chats in database
+     await setDoc(doc(db, "userChats", newChatUser.user.uid), {});
+
       router.push("/home");
       toast({
         description: "Successfully signed up!",
       });
       console.log(newChatUser.user);
+      console.log(userDoc)
     } catch (err) {
       console.log(err);
       toast({
@@ -68,6 +83,19 @@ export default function SignUp() {
     try {
       const result = await signInWithPopup(auth, GoogleProvider);
       console.log(result.user);
+      const username = generateUsername("", 2, 19, result.user.displayName as string);
+
+      // Create the user profile and store in database collection
+      const userDoc = await setDoc(doc(db, "users", result.user.uid ), {
+        uid: result.user.uid,
+        username,
+        email: result.user.email
+      })
+      console.log(userDoc);
+
+      // Create empty user chats in database
+      await setDoc(doc(db, "userChats", result.user.uid), {});
+
       router.push("/home");
       toast({
         description: "Successfully signed in!",
