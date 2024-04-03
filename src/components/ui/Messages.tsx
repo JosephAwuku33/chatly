@@ -20,7 +20,7 @@ function Messages() {
 
   
   return (
-    <div className="bg-black p-4 overflow-scroll h-[calc(100%-160px)]">
+    <div className="bg-black p-4 overflow-scroll no-scrollbar h-[calc(100%-160px)]">
         {messages.map((m: any) => (
             <Message message={m} key={m!.id}/>
         ))}

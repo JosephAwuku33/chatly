@@ -30,17 +30,7 @@ export function MessagesList() {
     dispatch({type: "CHANGE_USER", payload: u})
   };
 
-  if (!chats) {
-    // Handle the case when chats is null or undefined
-    return <div>Loading...</div>;
-  } else {
-    Object.entries(chats as ArrayLike<any>).map((chat) => {
-      if ( chat[1] && chat[1].uid){
-        console.log(chat[1].uid);
-        console.log(chat[1].date);
-      }
-    });
-  }
+  
 
 
   
@@ -50,17 +40,17 @@ export function MessagesList() {
       {Object.entries(chats as ArrayLike<any>)?.sort((a, b) => b[1]?.date - a[1]?.date).map((chat) => (
         <div
           key={chat[0]}
-          onClick={() => chat[1] && handleSelect(chat[1])}
+          onClick={() => chat[1].userInfo && handleSelect(chat[1].userInfo)}
           className="flex items-start bg-[#141414] justify-start cursor-pointer hover:bg-slate-600 overflow-hidden space-x-1 p-2 rounded-md"
         >
           
           <Image src={profile} alt="Profile" width={60} height={60} />
           <div className="flex gap-1 p-2 mx-auto flex-col">
             <div className="font-semibold  text-green-950">
-              {chat[1] && chat[1].displayName}
+              {chat[1] && chat[1].userInfo.displayName}
             </div>
             <div className="line-clamp-1 text-sm text-gray-300">
-              {chat[1] && chat[1].textSent}
+              {chat[1] && chat[1].lastMessage?.text}
             </div>
           </div>
         </div>

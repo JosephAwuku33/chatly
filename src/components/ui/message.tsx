@@ -27,12 +27,11 @@ const Message = ({ message }: MessageProps) => {
       ref={ref}
       className={`flex gap-4 mb-4 ${message.senderId === user?.uid && "flex flex-row-reverse"}`}
     >
-      <div className="flex flex-col bg-gray-600 text-white">
-        <span className="text-xs">just now</span>
-      </div>
+      {/* <div className="flex text-center p-3 rounded-lg bg-gray-600 text-white">
+        <p className="text-xs">just now</p>
+      </div> */}
       <div className="flex items-end">
-        <p className="text-white rounded p-3 bg-green-950">{message.text}</p>
-        <Image src={nopfp} alt="profile" width={30} height={30} />
+        <p className="text-white rounded p-3 bg-green-800">{message.text}</p>
       </div>
     </div>
   );
