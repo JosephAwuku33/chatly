@@ -7,21 +7,18 @@ import Link from "next/link";
 import Image from "next/image";
 import PacManLoader from "@/components/ui/PacManLoader";
 import { useRouter } from "next/navigation";
-import {
-  createUserWithEmailAndPassword,
-  signInWithPopup
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { doc, setDoc } from "firebase/firestore";
 import { generateUsername } from "unique-username-generator";
+// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface IFormInput {
   fullName: string;
   email: string;
   password: string;
 }
-
 
 export default function SignUp() {
   const {
@@ -35,6 +32,8 @@ export default function SignUp() {
   const router = useRouter();
 
   const overrideProps = {};
+
+  
 
   const signUpWithEmailAndPasswordHandler: SubmitHandler<IFormInput> = async (
     data
@@ -53,18 +52,19 @@ export default function SignUp() {
       const userDoc = await setDoc(doc(db, "users", newChatUser.user.uid), {
         uid: newChatUser.user.uid,
         username,
-        email
+        email,
       });
 
-     // Create empty user chats in database
-     await setDoc(doc(db, "userChats", newChatUser.user.uid), {});
+      // Create empty user chats in database
+      await setDoc(doc(db, "userChats", newChatUser.user.uid), {});
 
       router.push("/home");
       toast({
-        description: "Successfully signed up!",
+        title: "Successful",
+        description: `Your username for this app is ${username}`,
       });
       console.log(newChatUser.user);
-      console.log(userDoc)
+      console.log(userDoc);
     } catch (err) {
       console.log(err);
       toast({
@@ -83,14 +83,19 @@ export default function SignUp() {
     try {
       const result = await signInWithPopup(auth, GoogleProvider);
       console.log(result.user);
-      const username = generateUsername("", 2, 19, result.user.displayName as string);
+      const username = generateUsername(
+        "",
+        2,
+        19,
+        result.user.displayName as string
+      );
 
       // Create the user profile and store in database collection
-      const userDoc = await setDoc(doc(db, "users", result.user.uid ), {
+      const userDoc = await setDoc(doc(db, "users", result.user.uid), {
         uid: result.user.uid,
         username,
-        email: result.user.email
-      })
+        email: result.user.email,
+      });
       console.log(userDoc);
 
       // Create empty user chats in database
@@ -98,8 +103,11 @@ export default function SignUp() {
 
       router.push("/home");
       toast({
-        description: "Successfully signed in!",
+        title:"Successful",
+        description: `Your username for this app is ${username}`,
       });
+
+      
     } catch (err) {
       console.log(err);
       toast({
@@ -112,7 +120,6 @@ export default function SignUp() {
       setLoading(false);
     }
   };
-
 
   return (
     <>
@@ -317,7 +324,11 @@ export default function SignUp() {
                       Register
                     </button>
                     {/**Google button */}
-                    <button type="button" onClick={signUpWithGoogle} className="border-none outline-none">
+                    <button
+                      type="button"
+                      onClick={signUpWithGoogle}
+                      className="border-none outline-none"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="30px"
@@ -402,4 +413,3 @@ export default function SignUp() {
     </>
   );
 }
-

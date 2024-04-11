@@ -2,8 +2,8 @@
 import Image from "next/image";
 import Logo from "../../../public/Frame 6.svg";
 import NoProfilePic from "../../../public/nfp.svg";
-import { MessagesList } from "./messagesList";
-import { SearchBar } from "./searchBar";
+import { MessagesList } from "../../app/_components/messagesList";
+import { SearchBar } from "../../app/_components/searchBar";
 
 export function SideBar() {
   return (

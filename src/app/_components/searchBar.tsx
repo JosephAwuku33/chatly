@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   collection,
   query,
@@ -16,13 +16,21 @@ import { db } from "@/app/firebase/firebase-config";
 import { useAuth } from "@/app/context/AuthContext";
 import Image from "next/image";
 import nopfp from "../../../public/nfp.svg";
+import ResponsiveContext from "@/app/context/ResponsiveContext";
+import { useRouter } from "next/navigation";
 
 export function SearchBar() {
   const [username, setUsername] = useState<string>("");
   const [userToBeSet, setUserToBe] = useState<DocumentData | null>(null);
   const [err, setErr] = useState<boolean>(false);
-
+  const { isMobile } = useContext(ResponsiveContext);
   const { user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log("isMobile updated:", isMobile);
+  }, [isMobile]); // Log whenever isMobile changes
+
 
   const handleSearch = async () => {
     const q = query(collection(db, "users"), where("username", "==", username));
@@ -50,6 +58,11 @@ export function SearchBar() {
         : userToBeSet?.uid + user!.uid;
 
     console.log(combinedId);
+
+    if ( isMobile ){
+      router.push("/chat");
+    }
+    
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
       console.log(user?.uid);
@@ -78,12 +91,18 @@ export function SearchBar() {
         const updatedDoc = await getDoc(doc(db, "userChats", userToBeSet?.uid ));
         console.log(updatedDoc);
       }
+
+      if ( isMobile ) {
+        router.push("/home/chat");
+      }
+      
     } catch (err) {
       console.log(err);
     }
 
     setUserToBe(null);
     setUsername("");
+    
   };
 
   return (

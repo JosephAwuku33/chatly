@@ -3,13 +3,12 @@ import Image from "next/image";
 import profile from "../../../public/profile.svg";
 import { LogOutButton } from "./logoutbtn";
 import { ChatInput } from "./chatInput";
-import { useChat, ChatContext } from "@/app/context/ChatContext";
+import { ChatContext } from "@/app/context/ChatContext";
 import { useContext } from "react";
 import Messages from "./Messages";
 
 export function ChatArea() {
   const { data } = useContext(ChatContext);
-  // const { data } = useChat();
   console.log(data.user.displayName);
 
   return (

@@ -1,16 +1,20 @@
 "use client";
 import Image from "next/image";
-import profile from "../../../public/profile.svg";
+import nfp from "../../../public/nfp.svg";
 import React, { useState, useEffect, useContext } from "react";
-import { doc, DocumentData, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/app/firebase/firebase-config";
 import { useAuth } from "@/app/context/AuthContext";
-import { useChat, ChatContext } from "@/app/context/ChatContext";
+import { useChat } from "@/app/context/ChatContext";
+import { useRouter } from "next/navigation";
+import ResponsiveContext from "@/app/context/ResponsiveContext";
 
 export function MessagesList() {
   const [chats, setChats] = useState<any | null | undefined>([]);
   const { user } = useAuth();
   const { dispatch } = useChat();
+  const { isMobile } = useContext(ResponsiveContext);
+  const router = useRouter();
 
   useEffect(() => {
     const getChats = () => {
@@ -28,6 +32,9 @@ export function MessagesList() {
 
   const handleSelect = (u: any) => {
     dispatch({type: "CHANGE_USER", payload: u})
+    if ( isMobile ){
+      router.push("/home/chat");
+    }
   };
 
   
@@ -44,7 +51,7 @@ export function MessagesList() {
           className="flex items-start bg-[#141414] justify-start cursor-pointer hover:bg-slate-600 overflow-hidden space-x-1 p-2 rounded-md"
         >
           
-          <Image src={profile} alt="Profile" width={60} height={60} />
+          <Image src={nfp} alt="Profile" width={60} height={60} />
           <div className="flex gap-1 p-2 mx-auto flex-col">
             <div className="font-semibold  text-green-950">
               {chat[1] && chat[1].userInfo.displayName}

@@ -8,7 +8,7 @@ import { useState } from "react";
 
 export function ChatInput() {
   const [text, setText] = useState<string>("");
-  const [img, setImg] = useState(null);
+  //const [img, setImg] = useState(null);
 
   const { user } = useAuth();
   const { data } = useChat();
@@ -39,7 +39,7 @@ export function ChatInput() {
     });
 
     setText("");
-    setImg(null);
+    //setImg(null);
   };
 
   return (
